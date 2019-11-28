@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Dropdown from './Dropdown.js';
+import Button from "./Button";
 
 const API = "https://developers.zomato.com/api/v2.1/cities?q=Santander"
 
@@ -24,6 +25,7 @@ class App extends Component {
       <div>
         <h1>Restaurant + route finder in Santander</h1>
         <Dropdown></Dropdown>
+        <Button/>
       </div>
     );
   }
