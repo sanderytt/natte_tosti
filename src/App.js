@@ -2,6 +2,21 @@ import React, { Component } from 'react';
 import './App.css';
 import Dropdown from './Dropdown.js';
 import Button from "./Button";
+import ReactMapGL from 'react-map-gl'
+ 
+const mapAccess = {
+  mapboxApiAccessToken: 'pk.eyJ1IjoiamFub3ZpY2giLCJhIjoiY2szaXJpcHB5MGFoZzNlcWxweDRsMDA3cyJ9.l4oarzXlOHKWZqhf44-tsA'
+}
+
+const mapStyle = {
+  width: 600,
+  height: 600
+}
+ 
+const queryParams = {
+  country: 'us'
+}
+
 
 class App extends Component {
   constructor(props) {
@@ -10,7 +25,12 @@ class App extends Component {
     this.state = {
       cuisines: [],
       restaurants: [],
-      restaurantsLoaded: false
+      restaurantsLoaded: false,
+      viewport: {width:600,
+        height:600,
+        latitude: 37.7571,
+        longitude: -122.4376,
+        zoom: 8}
     };
   }
 
@@ -95,6 +115,10 @@ class App extends Component {
             </div>
             )
           })}
+          <ReactMapGL
+                    {...mapAccess} {...this.state.viewport} {...mapStyle}
+                    onViewportChange={(newViewport) => this.setState({viewport: newViewport})}
+                />
           </div>  
     );
   }
