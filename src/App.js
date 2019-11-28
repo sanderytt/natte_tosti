@@ -8,7 +8,9 @@ class App extends Component {
     super(props);
 
     this.state = {
-      cuisines: []
+      cuisines: [],
+      restaurants: [],
+      restaurantsLoaded: false
     };
   }
 
@@ -31,7 +33,7 @@ class App extends Component {
    * @param  {number} cityId
    * @return {Promise}
    */
-  getCuisines(cityId) {
+  getCuisines = (cityId) =>  {
     return fetch("https://developers.zomato.com/api/v2.1/cuisines?city_id=" + cityId, {
       headers: {
         "user-key": "8296f931336b95ff78fc964b650c6c45"
@@ -46,13 +48,28 @@ class App extends Component {
    * @param {array} cuisineIds 
    * @param {number} limit 
    */
-  getRestaurants(cityId, cuisineIds = [], limit = 20) {
+  getRestaurants = (cityId, cuisineIds = [], limit = 20) => {
     const cuisines = cuisineIds.join(',');
-
-    return fetch(`https://developers.zomato.com/api/v2.1/search?entity_id=${cityId}&count=${limit}&cuisines=${cuisines}`, {
+    return fetch(`https://developers.zomato.com/api/v2.1/search?entity_id=${cityId}&count=${limit}&entity_type=city&cuisines=${cuisines}`, {
       headers: {
         "user-key": "8296f931336b95ff78fc964b650c6c45"
       }
+    });
+  }
+
+  /**
+   * Get the value of the selected cuisine in dropdown
+   * 
+   * @param {e} event 
+   */
+
+  selectHandler = (e) => {
+    const cuisineId = e.target.value;
+    this.getRestaurants(280, [cuisineId])
+    .then(res =>  res.json())
+    .then(data => {
+      this.setState({restaurants: data.restaurants.map(r => r.restaurant)})
+      console.log("restaurants", this.state.restaurants);
     });
   }
 
@@ -61,12 +78,24 @@ class App extends Component {
       <div>
         <h1>Restaurant + route finder in Santander</h1>
         <p>Waar heb je trek in vandaag?</p>
-        <select name="cuisine">
+        <select name="cuisine" onChange={this.selectHandler}>
           {this.state.cuisines.map((cuisine) => {
             return <option value={cuisine.cuisine.cuisine_id}>{cuisine.cuisine.cuisine_name}</option>
           })}
         </select>
-      </div>
+          <h1>Getoonde restaurants:</h1>
+          {this.state.restaurants.map((restaurant) => {
+            return (
+            <div>
+              <h3>{restaurant.name}</h3>
+              <p>{restaurant.location.address}</p>
+              <button type="submit" className="btn btn-primary">Bereken route</button>
+              <br />
+              <br />
+            </div>
+            )
+          })}
+          </div>  
     );
   }
 }
