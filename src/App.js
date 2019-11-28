@@ -60,17 +60,12 @@ class App extends Component {
     return (
       <div>
         <h1>Restaurant + route finder in Santander</h1>
-<<<<<<< HEAD
         <p>Waar heb je trek in vandaag?</p>
         <select name="cuisine">
           {this.state.cuisines.map((cuisine) => {
             return <option value={cuisine.cuisine.cuisine_id}>{cuisine.cuisine.cuisine_name}</option>
           })}
         </select>
-=======
-        <Dropdown></Dropdown>
-        <Button/>
->>>>>>> master
       </div>
     );
   }
